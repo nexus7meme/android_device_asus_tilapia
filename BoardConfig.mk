@@ -21,3 +21,5 @@ TARGET_RECOVERY_FSTAB := device/asus/tilapia/rootdir/fstab.grouper
 
 # Security
 BOARD_SEPOLICY_DIRS += device/asus/tilapia/sepolicy
+
+DEVICE_MANIFEST_FILE += device/asus/tilapia/manifest-radio.xml
