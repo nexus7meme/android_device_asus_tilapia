@@ -1,0 +1,38 @@
+# Device scripts installed on /system and started by init.
+type touchfw, domain, coredomain;
+type touchfw_exec, exec_type, file_type, system_file_type;
+init_daemon_domain(touchfw)
+allow touchfw shell_exec:file rx_file_perms;
+allow touchfw sysfs_firmware_writable:file w_file_perms;
+
+type sensors_config, domain, coredomain;
+type sensors_config_exec, exec_type, file_type, system_file_type;
+init_daemon_domain(sensors_config)
+allow sensors_config shell_exec:file rx_file_perms;
+allow sensors_config toolbox_exec:file rx_file_perms;
+allow sensors_config oemfs:dir r_dir_perms;
+allow sensors_config oemfs:file r_file_perms;
+allow sensors_config sysfs_sensor_calibration:file w_file_perms;
+
+# Proprietary GPS daemon remains on the legacy vendor path.
+type gpsd, domain;
+type gpsd_exec, exec_type, file_type, vendor_file_type;
+init_daemon_domain(gpsd)
+net_domain(gpsd)
+allow gpsd gps_device:chr_file rw_file_perms;
+allow gpsd gps_data_file:dir create_dir_perms;
+allow gpsd gps_data_file:file create_file_perms;
+allow gpsd gps_data_file:fifo_file create_file_perms;
+allow gpsd gps_socket:sock_file rw_file_perms;
+allow gpsd self:unix_stream_socket create_stream_socket_perms;
+allow gpsd sysfs_gps_standby:file rw_file_perms;
+unix_socket_connect(hal_gnss_default, gps, gpsd)
+# Broadcom's legacy HAL exchanges commands/data with gpsd over named FIFOs,
+# and stores its SUPL configuration alongside them in the GPS data directory.
+allow hal_gnss_default gps_data_file:dir rw_dir_perms;
+allow hal_gnss_default gps_data_file:file create_file_perms;
+allow hal_gnss_default gps_data_file:fifo_file create_file_perms;
+
+# Export and initialize only the board GPS standby GPIO during boot.
+allow init sysfs_gpio_export:file w_file_perms;
+allow init sysfs_gps_standby:file { open write getattr setattr };

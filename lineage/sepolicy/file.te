@@ -1,0 +1,34 @@
+type sysfs_firmware_writable, fs_type, sysfs_type;
+type sysfs_devices_tegradc, fs_type, sysfs_type;
+type sysfs_module_fuse, fs_type,sysfs_type;
+type sysfs_module_nvhost, fs_type,sysfs_type;
+type sysfs_modules_tegrafuse, fs_type, sysfs_type;
+type sysfs_devices_nvavp, fs_type, sysfs_type;
+type debugfs_pmqos, fs_type, debugfs_type;
+
+#typealias vfat alias sdcard_external;
+
+type gps_data_file, file_type, data_file_type, core_data_file_type;
+type sensors_data_file, file_type, data_file_type, core_data_file_type;
+type gps_socket, file_type;
+type sysfs_sensor_calibration, fs_type, sysfs_type;
+type sysfs_baseband, fs_type, sysfs_type;
+
+# Limit power-management writes to frequency policy controls.
+type sysfs_cpufreq_controls, fs_type, sysfs_type;
+
+# MPU6050 / AMI306 IIO controls for the retained sensors HAL.
+type sysfs_tilapia_iio, fs_type, sysfs_type;
+
+# GPS standby GPIO and the init-only GPIO export control.
+type sysfs_gps_standby, fs_type, sysfs_type;
+type sysfs_gpio_export, fs_type, sysfs_type;
+
+# Init-only VM control for the compressed-swap policy.
+type proc_tilapia_swappiness, fs_type, proc_type;
+
+# Only the touchscreen wake-enable switch, not firmware/debug controls.
+type sysfs_tilapia_touch_wake, fs_type, sysfs_type;
+
+# Native RIL preferences are separate from Phone app-private storage.
+type tilapia_ril_data_file, file_type, data_file_type;

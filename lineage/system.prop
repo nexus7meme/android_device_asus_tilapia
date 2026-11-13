@@ -1,0 +1,32 @@
+# Hardware properties retained for initial Android 11 bring-up.
+ro.opengles.version=131072
+ro.sf.lcd_density=213
+wifi.interface=wlan0
+rild.libpath=/vendor/lib/libtilapia-ril.so
+rild.libargs=-d /dev/ttyACM0
+ro.audio.monitorOrientation=true
+ro.zygote.disable_gl_preload=true
+persist.tegra.nvmmlite=1
+
+# Match the proprietary HALs actual SONAME and driver suffix.
+ro.hardware.gralloc=tegra
+ro.hardware.hwcomposer=tegra
+ro.hardware.egl=tegra
+
+# Tegra 3 uses NvMap; Codec2 software allocation requires unavailable ION.
+# Select the platform OMX codecs for audio and video.
+debug.stagefright.ccodec=0
+
+# Allow HIDL fallback and BCM4330 firmware download during a busy cold boot.
+bluetooth.enable_timeout_ms=8000
+
+# Use Android 11 MediaProvider FUSE; this kernel's old sdcardfs lacks the
+# per-app GID and unshared-OBB semantics requested by the modern mount helper.
+external_storage.sdcardfs.enabled=false
+
+# The 3.1 kernel uses its in-kernel LMK, not PSI-based userspace reclaim.
+ro.lmk.use_psi=false
+ro.config.per_app_memcg=false
+
+# Override runtime_libart default.prop after it is loaded at boot.
+dalvik.vm.dex2oat-Xmx=256m

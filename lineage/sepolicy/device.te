@@ -1,0 +1,13 @@
+type knv_device, dev_type;
+type nvhost_device, dev_type;
+type elan_ip_device, dev_type;
+type pmqos_device, dev_type;
+type baseband_log_device, dev_type;
+
+type gps_device, dev_type;
+
+# Tegra display controller character devices, distinct from render engines.
+type tegra_dc_device, dev_type;
+
+# NVIDIA auxiliary processor channel used by the legacy camera pipeline.
+type tegra_avp_device, dev_type;

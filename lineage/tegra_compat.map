@@ -1,0 +1,13 @@
+{
+  global:
+    __aeabi_f2lz;
+    __aeabi_f2ulz;
+    __aeabi_d2lz;
+    __aeabi_d2ulz;
+    android_atomic_inc;
+    android_atomic_dec;
+    android_atomic_acquire_load;
+    android_atomic_release_store;
+    socket_loopback_client;
+  local: *;
+};

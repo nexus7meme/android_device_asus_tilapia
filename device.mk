@@ -22,20 +22,23 @@ PRODUCT_PACKAGES += \
     libstlport
 
 PRODUCT_COPY_FILES := \
-    device/asus/tilapia/fstab.grouper:root/fstab.grouper \
-    device/asus/tilapia/init.tilapia.rc:root/init.grouper.rc
+    $(if $(filter lineage_tilapia,$(TARGET_PRODUCT)),device/asus/tilapia/lineage/fstab.grouper,device/asus/tilapia/fstab.grouper):root/fstab.grouper \
+    $(if $(filter lineage_tilapia,$(TARGET_PRODUCT)),device/asus/tilapia/lineage/init.grouper.rc,device/asus/tilapia/init.tilapia.rc):root/init.grouper.rc
 
 # the actual meat of the device-specific product definition
 $(call inherit-product, device/asus/grouper/device-common.mk)
 
 DEVICE_PACKAGE_OVERLAYS := \
-    device/asus/tilapia/overlay
+    $(if $(filter lineage_tilapia,$(TARGET_PRODUCT)),device/asus/tilapia/lineage/overlay,device/asus/tilapia/overlay)
 
 # Allow tethering without provisioning app
 PRODUCT_PROPERTY_OVERRIDES += \
     net.tethering.noprovisioning=true
 
+ifneq ($(TARGET_PRODUCT),lineage_tilapia)
 VENDOR_FOLDER := vendor/asus/tilapia
 PRODUCT_COPY_FILES += \
 	$(VENDOR_FOLDER)/proprietary/vendor/lib/libxgold-ril.so:system/lib/libxgold-ril.so \
 	$(VENDOR_FOLDER)/proprietary/etc/apns-conf.xml:system/etc/apns-conf.xml
+
+endif # legacy blob copy rules

@@ -1,0 +1,11 @@
+# This kernel uses legacy Android wake locks, not CAP_BLOCK_SUSPEND/EPOLLWAKEUP.
+# Keep the capabilities needed by the UART/rfkill HAL; an unsupported capability
+# makes init reject the entire capabilities directive.
+service vendor.bluetooth-1-0 /vendor/bin/hw/android.hardware.bluetooth@1.0-service
+    override
+    interface android.hardware.bluetooth@1.0::IBluetoothHci default
+    class hal
+    capabilities NET_ADMIN SYS_NICE
+    user bluetooth
+    group bluetooth
+    task_profiles HighPerformance

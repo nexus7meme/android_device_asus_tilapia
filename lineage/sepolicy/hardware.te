@@ -1,0 +1,65 @@
+# Hardware access is assigned to Android 11 HAL servers instead of granting
+# ptrace, debugfs writes, or executable system data to arbitrary core services.
+allow surfaceflinger knv_device:chr_file rw_file_perms;
+allow hal_graphics_composer_server { knv_device nvhost_device }:chr_file rw_file_perms;
+allow hal_graphics_allocator_server { knv_device nvhost_device }:chr_file rw_file_perms;
+allow hal_camera_server nvhost_device:chr_file rw_file_perms;
+allow hal_omx_server nvhost_device:chr_file rw_file_perms;
+allow { appdomain surfaceflinger hal_graphics_composer_server hal_graphics_allocator_server hal_camera_server hal_omx_server -isolated_app } { sysfs_module_fuse sysfs_module_nvhost sysfs_modules_tegrafuse }:file r_file_perms;
+allow hal_graphics_composer_server sysfs_devices_tegradc:dir r_dir_perms;
+allow hal_graphics_composer_server sysfs_devices_tegradc:file rw_file_perms;
+allow hal_graphics_composer_server sysfs_devices_tegradc:lnk_file r_file_perms;
+allow hal_sensors_server sensors_data_file:dir r_dir_perms;
+allow hal_sensors_server sensors_data_file:file r_file_perms;
+allow rild { radio_device baseband_log_device }:chr_file rw_file_perms;
+allow rild sysfs_baseband:dir r_dir_perms;
+allow rild sysfs_baseband:file rw_file_perms;
+
+# Legacy init configures smartdimmer before the system-UID composer starts.
+allow init sysfs_devices_tegradc:dir search;
+allow init sysfs_devices_tegradc:lnk_file read;
+allow init sysfs_devices_tegradc:file { getattr setattr };
+allow hal_graphics_composer_server tegra_dc_device:chr_file rw_file_perms;
+
+# Init assigns DAC ownership to the dedicated wireless HAL control nodes.
+allow init { sysfs_wlan_fwpath sysfs_bluetooth_writable proc_bluetooth_writable }:file { getattr setattr };
+
+# Restore dynamic scaling and the existing Tegra timed input/boot boost path.
+allow init sysfs_cpufreq_controls:file { getattr open read write setattr };
+allow hal_power_server sysfs_cpufreq_controls:file rw_file_perms;
+allow hal_power_server pmqos_device:chr_file rw_file_perms;
+# Legacy early-suspend resume when the Android display becomes interactive.
+allow hal_power_server sysfs_power:file { getattr open write };
+
+# HAL1 camera allocations and the Tegra auxiliary processor pipeline.
+allow hal_camera_server { knv_device gpu_device tegra_avp_device }:chr_file rw_file_perms;
+allow init { knv_device nvhost_device tegra_avp_device }:chr_file setattr;
+wakelock_use(hal_camera_server)
+
+# Hardware-specific sensor controls and backlight ownership at initialization.
+allow hal_sensors_server iio_device:chr_file rw_file_perms;
+allow hal_sensors_server sysfs_tilapia_iio:dir r_dir_perms;
+allow hal_sensors_server sysfs_tilapia_iio:file rw_file_perms;
+allow hal_sensors_server sysfs_tilapia_iio:lnk_file r_file_perms;
+allow init { sysfs_tilapia_iio sysfs_leds }:file { getattr setattr };
+
+# IIO discovery symlinks are read while init follows ownership paths.
+allow init sysfs_tilapia_iio:lnk_file read;
+# The old HAL opens existing sysfs controls with O_TRUNC via stdio.
+allow hal_sensors_server sysfs_tilapia_iio:file setattr;
+
+# Only init sets the persistent VM swap/readahead policy during boot.
+allow init proc_tilapia_swappiness:file w_file_perms;
+
+# Init assigns DAC ownership; PowerManager's HAL owns the user's wake setting.
+allow init sysfs_tilapia_touch_wake:file { getattr setattr };
+allow hal_power_server sysfs_tilapia_touch_wake:file { getattr open write };
+
+# Only the legacy native RIL owns its dedicated preference directory.
+allow init tilapia_ril_data_file:dir create_dir_perms;
+allow rild tilapia_ril_data_file:dir create_dir_perms;
+allow rild tilapia_ril_data_file:file create_file_perms;
+
+# XGold publishes per-rmnet DNS/gateway metadata before completing data setup.
+# Use the existing radio property type; global net.dns stays restricted.
+set_prop(rild, net_radio_prop)

@@ -1,3 +1,6 @@
+ifeq ($(TARGET_PRODUCT),lineage_tilapia)
+include device/asus/tilapia/lineage/BoardConfig.mk
+else
 # Copyright (C) 2010 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -63,3 +66,5 @@ dalvik.vm.usejit=true \
 dalvik.vm.heaptargetutilization=0.9 \
 dalvik.vm.dexopt-flags=v=a,o=v
 
+
+endif # lineage_tilapia

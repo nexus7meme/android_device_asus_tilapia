@@ -1,0 +1,10 @@
+genfscon proc /bluetooth/sleep/btwrite u:object_r:proc_bluetooth_writable:s0
+genfscon proc /bluetooth/sleep/lpm u:object_r:proc_bluetooth_writable:s0
+
+genfscon sysfs /class/gpio/export u:object_r:sysfs_gpio_export:s0
+genfscon sysfs /devices/virtual/gpio/gpio162/value u:object_r:sysfs_gps_standby:s0
+genfscon sysfs /devices/virtual/gpio/gpio162/direction u:object_r:sysfs_gps_standby:s0
+
+genfscon proc /sys/vm/swappiness u:object_r:proc_tilapia_swappiness:s0
+
+genfscon sysfs /android_touch/doubletap_wake u:object_r:sysfs_tilapia_touch_wake:s0
